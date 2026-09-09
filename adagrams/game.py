@@ -1,4 +1,5 @@
 from random import randint
+from adagrams.std_utils import minimum, maximum
 
 def draw_letters():
     pass
