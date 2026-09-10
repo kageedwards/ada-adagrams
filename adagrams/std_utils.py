@@ -1,11 +1,12 @@
 from random import randint
 
-def randindex(list: list) -> int:
-    try:
-        random_index = randint(0, len(list) - 1)
-        return random_index
-    except ValueError as err:
+def randindex(list: list) -> int | None:
+    end = len(list) - 1
+
+    if end == 0:
         return 0
+        
+    return randint(0, end)
 
 # Binary search
 # Look in the middle.
