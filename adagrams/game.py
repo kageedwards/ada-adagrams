@@ -1,5 +1,5 @@
 from random import randint
-from adagrams.std_utils import minimum, maximum
+from adagrams.std_utils import minimum, maximum, randindex
 
 LETTER_WEIGHTS = {
     "A": 9, "B": 2, "C": 2, "D": 4,
@@ -11,22 +11,25 @@ LETTER_WEIGHTS = {
     "Y": 2, "Z": 1
 }
 
-letter_weight_cache = []
+HAND_SIZE = 10
 
-def init_letter_cache():
-    for letter, weight in LETTER_WEIGHTS.items():
-        for i in range(0, weight):
-            letter_weight_cache.append(letter)
+def populate_letter_cache(letter_list: list):
+    if not letter_list:
+        for letter, weight in LETTER_WEIGHTS.items():
+            for i in range(0, weight):
+                letter_list.append(letter)
 
-def draw_letters() -> list[str[1]]:
-    #simplify iteration / letter pool mgmt for later
-    if not letter_weight_cache:
-        init_letter_cache()
+def draw_letters() -> list[str]:
+    hand = []
+    letter_cache = []
+    populate_letter_cache(letter_cache)
 
-    todo("implement hand of letters generation")
+    for i in range(HAND_SIZE):
+        random_letter_index = randindex(letter_cache)
+        random_letter = letter_cache.pop(random_letter_index)
+        hand.append(random_letter)
 
-    # todo: replace
-    return []
+    return hand
 
 def uses_available_letters(word, letter_bank):
     pass
