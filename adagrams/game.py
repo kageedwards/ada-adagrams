@@ -1,5 +1,5 @@
 from random import randint
-from adagrams.std_utils import minimum, maximum, randindex
+from adagrams.std_utils import minimum, maximum, randindex, binary_search
 
 LETTER_WEIGHTS = {
     "A": 9, "B": 2, "C": 2, "D": 4,
@@ -31,8 +31,25 @@ def draw_letters() -> list[str]:
 
     return hand
 
-def uses_available_letters(word, letter_bank):
-    pass
+def uses_available_letters(word: str, letter_bank: list) -> bool:
+    letter_bank_tmp = letter_bank.copy()
+    letter_bank_tmp.sort()
+    for i in range(len(word)):
+        # Find first instance of this letter in the letter_bank
+        first_index_of = binary_search(letter_bank_tmp, word[i])
+
+        # If not found, it all fails
+        if first_index_of is None:
+            return False
+
+        # If we got here, remove that letter and continue checking
+        letter_bank_tmp.pop(first_index_of)
+
+    # If we got through the entire word safely,
+    # all the letters were available in the letter bank
+    return True
+
+
 
 def score_word(word):
     pass
