@@ -1,5 +1,4 @@
 from random import randint
-from adagrams.std_utils import randindex, binary_search
 
 LETTER_WEIGHTS = {
     "A": 9, "B": 2, "C": 2, "D": 4,
@@ -23,6 +22,16 @@ LETTER_SCORES = {
 
 HAND_SIZE = 10
 BONUS_POINTS = 8
+
+def randindex(list: list) -> int | None:
+    end = len(list) - 1
+
+    # prevent an error from
+    # running randint(0, 0)
+    if end == 0:
+        return 0
+
+    return randint(0, end)
 
 def populate_letter_cache(letter_list: list):
     if not letter_list:
@@ -48,22 +57,26 @@ def draw_letters() -> list[str]:
     return hand
 
 def uses_available_letters(word: str, letter_bank: list) -> bool:
-    # Let's not mess up the referenced letter_bank list
-    letter_bank_tmp = letter_bank.copy()
-    letter_bank_tmp.sort()
-    for i in range(len(word)):
-        # Find first instance of this letter in the letter_bank
-        first_index_of = binary_search(letter_bank_tmp, word[i])
+    letter_bank_counts = {}
 
-        # If not found, it all fails
-        if first_index_of is None:
+    # Populate a dictionary with the counts of unique letters present
+    # in the provided `letter_bank`
+    for letter in letter_bank:
+        letter_ci = letter.casefold()
+        letter_bank_counts[letter_ci] = letter_bank_counts.get(letter_ci, 0) + 1
+
+    # For each letter in the word...
+    for letter in word.casefold():
+        # Check if it's not present in the letter bank at all
+        if letter_bank_counts.get(letter, 0) == 0:
             return False
 
-        # If we got here, remove that letter and continue checking
-        letter_bank_tmp.pop(first_index_of)
+        # One instance of this letter is accounted for.
+        # Subtract one from our counts dictionary
+        letter_bank_counts[letter] -= 1
 
-    # If we got through the entire word safely,
-    # all the letters were available in the letter bank
+    # If we reach this point,
+    # all letters were present.
     return True
 
 def score_word(word: str) -> int:
